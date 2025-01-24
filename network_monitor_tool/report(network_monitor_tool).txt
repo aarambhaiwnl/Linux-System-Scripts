@@ -1,0 +1,38 @@
+Purpose of the Script
+We created the network_monitor_tool.sh script to make it easier to monitor and manage network activity on a computer. 
+The goal was to build a simple tool that lets users see what’s happening with their network, track data usage, and log network traffic for future reference. 
+It’s especially useful for anyone who wants to keep an eye on their network connections or ensure everything is running smoothly.
+
+What the Script Does
+Check Active Network Interfaces:
+The script shows all the active network interfaces and their IP addresses. This helps users quickly see which interfaces are being used.
+
+Monitor Bandwidth Usage:
+It uses a tool called iftop to display real-time bandwidth usage for each interface. This is helpful for identifying if something is consuming too much data.
+
+Monitor Connections to a Specific IP:
+Users can enter an IP address, and the script will alert them if there’s a connection to that IP. This is useful for keeping an eye on specific devices or detecting potential intruders.
+
+Track Network Traffic and Log Data:
+The script continuously tracks how much data each network interface is sending and receiving. It logs this information into a file called network_traffic.log, allowing users to review it later.
+
+Commands We Used and Why
+ip -brief addr show:
+This command lists all network interfaces and their IP addresses in a simplified format. We used it to display only the active interfaces.
+
+iftop:
+This tool shows live bandwidth usage. We used it to monitor real-time data consumption, helping users understand their network's performance.
+
+ss -tun:
+This command shows all active network connections. We used it to monitor connections to a specific IP address and trigger alerts when a connection is made.
+
+cat /proc/net/dev:
+This file provides detailed traffic stats for each network interface. We used it to collect data about how much information is being sent and received over the network.
+
+What We Learned
+While working on this script, we gained a deeper understanding of networking tools and how they work. For example:
+
+We learned to use tools like ip, ss, and iftop for network management.
+We also became familiar with /proc/net/dev and how it tracks network traffic, which was essential for logging data over time.
+Setting up alerts for specific IP addresses helped us understand how to monitor network activity in real-time.
+We gained experience in automating the tracking of network data and saving logs for future reference.

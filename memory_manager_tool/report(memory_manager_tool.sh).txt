@@ -1,0 +1,49 @@
+We created the memory_manager_tool.sh script to help users monitor and manage memory usage on their systems. 
+The goal was to provide a simple tool to check memory usage, find memory-hogging processes, clear caches to free up memory, 
+and alert users when the available memory is critically low. This script makes it easier for users, especially those who are not familiar with Linux memory management, to perform these tasks quickly and efficiently.
+
+What the Script Does
+The script offers the following functionalities:
+
+Display Current Memory Usage:
+
+Using the free -m command, the script shows the total, used, and free memory in megabytes (MB), giving users a quick overview of the system's memory status.
+List Processes Consuming More Memory:
+
+The script allows the user to specify a memory threshold (in MB). It then uses the ps aux command to display processes that are using more memory than the specified threshold, sorting them by memory usage. This helps users identify memory-heavy processes and potentially optimize or stop them if needed.
+Clear Memory Cache and Buffers:
+
+The script can clear the system's memory cache and buffers by writing to /proc/sys/vm/drop_caches. This can free up memory that’s used by the kernel for caching, which is especially useful when the system is running low on memory. The command echo 3 | sudo tee /proc/sys/vm/drop_caches is used for this, as tee allows the command to run with elevated privileges.
+Check for Low Available Memory:
+
+The script reads from /proc/meminfo to check how much memory is available. If the available memory falls below 100MB, it alerts the user. This feature is useful for preventing system slowdowns or crashes due to low memory.
+
+Commands Used and Their Purposes
+free -m:
+Displays memory usage, including total, used, and free memory, in megabytes. This command provides a quick snapshot of system memory.
+
+ps aux:
+Lists all running processes with details such as memory and CPU usage. We use it to identify memory-hogging processes. The --sort=-rss option sorts processes by memory usage.
+
+awk:
+Processes and filters the output from ps aux, specifically looking at the RSS column (resident memory size) and comparing it to the user-defined memory threshold. We divide by 1024 to convert memory from kilobytes to megabytes.
+
+sync:
+Synchronizes cached writes to disk. This ensures that any pending changes are written before clearing the caches, which helps avoid data loss.
+
+tee:
+Used to write to a file (in this case, /proc/sys/vm/drop_caches) with elevated privileges. We use tee in combination with sudo because redirection (>) does not apply sudo to the shell’s output, which would cause permission issues.
+
+/proc/meminfo:
+Provides detailed information about system memory. We use it to check the available memory to determine if it’s below the critical threshold.
+
+What We Learned
+While developing this script, we gained a deeper understanding of how memory management works in Linux. We learned how to:
+
+Use the ps command to analyze running processes and their memory usage.
+Use awk to filter and format output based on specific criteria.
+Manage system memory by clearing cache and buffers to free up memory.
+Monitor system health by checking available memory and setting alerts for low memory situations.
+
+Execute commands that require root access and how to avoid permission issues when trying to write to system files. 
+The use of sudo tee demonstrated how to grant temporary elevated privileges for specific tasks (like clearing caches).

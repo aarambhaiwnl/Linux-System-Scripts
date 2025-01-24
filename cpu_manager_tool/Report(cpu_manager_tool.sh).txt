@@ -1,0 +1,35 @@
+Report(cpu_manager_tool.sh)
+
+Commands Used:
+
+cpu_usage():
+- mpstat: displays CPU usage statistics, provides info about CPU such as user time, system time, etc
+- grep -A 5 "%idle": used to search for the line that contains %idle (shows idle percentage), the -A 5 option shows the next    five lines after the match
+- awk '{print 100 - $12 "%"}': awk extracts the idle percentage wich is in the 12th field of the mpstat output hence the $12 and it then subtracts 100 from it to calculate the current CPU usage
+
+track_usage():
+- echo "CPU usage at $(date)": date is to log current timestamp just so that every entry in the log file has a timestamp
+- mpstat | grep -A 5 "%idle" | awk '{print 100 - $12 "%"}': Explained in cpu_usage
+- >> "$log_file": >> appends output to the logfile
+- sleep 10: Makes the script pause for 10 seconds before starting the next iteration
+
+set_cpu_affinity():
+- read -p "Enter PID to set CPU affinity": prompts user to enter the PID of the process that they would like to adjust CPU cores for
+- taskset -cp "$cpus" "$pid": taskset is used to set CPU affinity for a process. The -cp option specifies the CPUs that will be bound to the process.
+- 2>/dev/null: restricts error messages if the command fails (in case PID is incorrect or if there aren't necessary permissions)
+
+high_cpu_usage_alert():
+- read -p "Enter CPU usage limit": prompts user to enter the CPU usage limit that they want
+- usage=$(cpu_usage | grep -o '[0-9]\+'): calls cpu_usage function and extracts the number value from it and stores it in the usage variable
+- if (( usage > limit )): checks to see if the CPU usage is greater than the limit that the user has given
+- sleep 5: makes it so that the loop repeats every 5 seconds
+
+Next part is just the main menu where user is prompted to enter a number that corresponds to the function they would like to use
+
+
+
+Learning Outcomes:
+
+- gained hands on experience using tools like mpstat and taskset to further monitor and understand CPU performance
+- helped me grow my skills in bash scripting overall as it made me handle loops, conditional statements and commands like awk and grep for text control
+- gained a overall deeper understanding of how CPU resources are utilized 

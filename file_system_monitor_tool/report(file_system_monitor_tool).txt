@@ -1,0 +1,30 @@
+Purpose of Each Command
+
+df -h:
+Displays disk usage for each filesystem in a human-readable format, making it easier to assess available space.
+Useful for system administrators to monitor disk space.
+
+
+du -ah | sort -rh | head -n 15:
+du -ah lists all files and their sizes.
+sort -rh orders the files by size in descending order.
+head -n 15 limits the output to the top 15 largest files.
+This combination is essential for identifying large files that may be consuming significant storage.
+
+
+find <directory> -type f -mtime -1 | head -n 15:
+Searches for files (-type f) modified within the last 24 hours (-mtime -1) in the specified directory.
+This is helpful for tracking recently changed files, which can be useful for troubleshooting or managing backups.
+
+find <directories> -type f -size +<threshold> -exec rm -v {} ;:
+Locates files in /tmp and /var/tmp exceeding a given size threshold (-size +<threshold>).
+Deletes the identified files using rm -v, with verbose output to show what’s being removed.
+This prevents temporary files from overloading disk space, especially in systems with heavy usage of temporary storage.
+
+Learning Outcomes
+
+learned how powerful commands like df, du, and find can be for file and disk management. They allow precise control over file searches, sorting, and cleanup.
+
+learned how to create a tool that is both reusable and interactive.
+
+learned how to handle errors like invalid directories and ensuring the script gracefully deals with incorrect inputs

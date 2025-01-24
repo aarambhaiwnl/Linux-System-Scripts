@@ -1,0 +1,67 @@
+Report: process_manager_tool.sh
+
+1. Listing all processes: This function shows processes and their resource consumption in a cleanly formatted way
+
+- uses ps aux to retrieve details of all the running processes
+	- a: lists processes for all the users
+	- u: displays user and resource usage
+	- x: shows system services
+- --sort=-%cpu: sorts the processes in a descending order according to CPU usage which means that it shows the processes that consume the most resources first
+
+- awk: shows the output cleanly formatted
+	- $2: PID of process
+	- $1: user that owns the process
+	- $3: percentage of cpu usage
+	- $4: percentage of memory usage
+	- %11: command that started the process
+- echo -e: shows table headers(PID, USER, etc) with columns separated by tabs
+
+2. Killing a process: This function allows a user to kill a process by specifying the PID of that process
+
+- read -p: makes the user enter the PID of the process they want to kill
+- [[ "$pid" =~ ^[0-9]+$ ]]: makes sure the input is numeric and checks that it doesn't have any strings or characters
+- kill -9 "$pid" ... : sends a signal to terminate the given PID, if it succeeds, it displays a message saying success but if it fails, then it will show an error message
+- rest is just error handling
+
+3. Displaying processes owned by a specific user: Shows processes owned by a username given
+
+- read -p: makes the user enter a username
+- ps aux | grep "^user": filters it so that it only shows processes that belong to the user entered
+- awk: formats the columns the same way it does in list_processes
+
+4. Top resource consuming processes: Shows the top 5 processes that consume the most CPU and the top 5 processes that consume the most memory
+
+- --sort=-%cpu: sorts processes by CPU usage in descending order
+- --sort=-%mem: sorts processes by memory usage in descending order
+- head -n 6: shows top 5 resource consuming processes
+- awk: formats output the same as the previous functions
+
+5. Scheduled checks on processes: helps automate monitoring processes and provides logs 
+
+- while true: keeps monitoring processes until program is stopped
+- $(date): adds a timestamp for each log entry
+- >> process_log.txt: appends output to the logfile
+- sleep 60: pauses script for 60 seconds before going through the next iteration
+
+
+
+Commands Used + Purposes:
+
+ps aux: lists processes with corresponding informations
+kill: sends signal to kill a process
+grep: filters output based on the patterns given
+awk: processes and formats the text output into tables
+sort: sorts processes by given specifier
+head: displays top entries from given specifier
+sleep: pauses script for given time
+
+Learning Outcomes:
+
+- gained experience with commands like ps awk, grep and kill
+- gained experience with input validation methods
+- learned more about process states, resource consumption and how to filter processes by given usernames
+- learned to automate tasks by using loops
+- learned how to improve script performance by adding error handling
+
+
+
